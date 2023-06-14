@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth.views import LogoutView
 import views
 
 urlpatterns = [
@@ -6,4 +7,5 @@ urlpatterns = [
     path('account-activation-sent/', views.account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('login/', views.login_view, name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 ]
