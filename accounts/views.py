@@ -4,6 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from django.contrib import messages
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 
@@ -29,13 +30,14 @@ def signup(request):
                 mail_subject, message, to=[user.email]
             )
             email.send()
-            return redirect('account_activation_sent')
+            messages.success(request=request, message='Account activation sent')
+            return redirect('accounts:login')
     else:
         form = CustomUserCreationForm()
     return render(request, 'accounts/signup.html', {'form': form})
 
-def account_activation_sent(request):
-    return render(request, 'accounts/account_activation_sent.html')
+# def account_activation_sent(request):
+#     return render(request, 'accounts/account_activation_sent.html')
 
 def activate(request, uidb64, token):
     try:
@@ -48,7 +50,8 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('home')
+        messages.success(request=request, message='Account Activated')
+        return redirect('accounts:login')
     else:
         return render(request, 'accounts/account_activation_invalid.html')
 
@@ -62,8 +65,8 @@ def login_view(request):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')
+                return redirect('accounts:home')
     else:
         form = CustomAuthenticationForm(request)
 
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'accounts/login.html', {'form': form})
