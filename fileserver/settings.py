@@ -129,8 +129,12 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT =  587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kwabena4140@gmail.com'
-EMAIL_HOST_PASSWORD = 'xxxxxx'
+EMAIL_HOST_PASSWORD = 'aihefcptcvjzyyfv'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.backendauths.EmailBackend']
+
