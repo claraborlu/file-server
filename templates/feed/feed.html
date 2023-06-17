@@ -1,0 +1,79 @@
+{% extends '_base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>File Server Feed</h2>
+
+    <!-- Images Section -->
+    <h3>Images</h3>
+    <div class="row">
+      {% for image in image_files %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="thumbnail">
+            <img src="{{ image.file.url }}" alt="{{ image.title }}">
+            <div class="caption">
+              <h4>{{ image.title }}</h4>
+              <p>{{ image.description }}</p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No images available.</p>
+      {% endfor %}
+    </div>
+
+    <!-- PDF Section -->
+    <h3>PDFs</h3>
+    <div class="row">
+      {% for pdf in pdf_files %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="thumbnail">
+            <i class="fas fa-file-pdf fa-4x"></i>
+            <div class="caption">
+              <h4>{{ pdf.title }}</h4>
+              <p>{{ pdf.description }}</p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No PDFs available.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Audio Section -->
+    <h3>Audio</h3>
+    <div class="row">
+      {% for audio in audio_files %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="thumbnail">
+            <i class="fas fa-file-audio fa-4x"></i>
+            <div class="caption">
+              <h4>{{ audio.title }}</h4>
+              <p>{{ audio.description }}</p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No audio files available.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Video Section -->
+    <h3>Videos</h3>
+    <div class="row">
+      {% for video in video_files %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="thumbnail">
+            <i class="fas fa-file-video fa-4x"></i>
+            <div class="caption">
+              <h4>{{ video.title }}</h4>
+              <p>{{ video.description }}</p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No videos available.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
