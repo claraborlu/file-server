@@ -15,7 +15,10 @@ class File(models.Model):
     file_type = models.CharField(max_length=15, choices=FILE_TYPES, blank=True, null=True)
     downloads = models.PositiveIntegerField(default=0)
     emails_sent = models.PositiveIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-uploaded_at',]
 
     def __str__(self):
         return self.title
