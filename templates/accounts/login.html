@@ -10,7 +10,9 @@
             {% csrf_token %}
             {{ form|crispy}}
             <br>
-            <p><input type="submit" value="Log In" class="btn btn-success ml-2" type="submit"></p>
+            <input type="submit" value="Log In" class="btn btn-success ml-2" type="submit"> ||
+            <a href="{% url 'accounts:signup' %}" class="btn btn-primary ml-2">Sign Up</a> ||
+            <a href="{% url 'password_reset' %}" class="btn btn-secondary ml-2">Password Reset</a>
         </form>
     </div>
 {% endblock content %}
