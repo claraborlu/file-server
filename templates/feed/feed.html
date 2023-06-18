@@ -3,7 +3,6 @@
 
 {% block content %}
   <div class="container">
-    <h1>Feed</h1>
     <div class="row">
       {% for file in files %}
         <div class="col-md-4">
@@ -12,7 +11,7 @@
               <div class="card-body">
                 <h5 class="card-title">{{ file.title }}</h5>
                 <p class="card-text small">{{ file.description }}</p>
-                
+
                 <!-- Ensure only admins can see downloads and emails stats -->
                 {% if user.is_staff %}
                 <div class="card-text">
@@ -46,11 +45,34 @@
               <div class="btn-group" role="group">
                 <a class="btn btn-secondary mx-1" href="{{ file.file.url }}" target="_blank">Preview</a>
                 <a class="btn btn-success mx-1" href="{% url 'feed:download' file.pk %}" download>Download</a>
-                <a class="btn btn-primary mx-1" href="mailto:?subject=Check%20out%20this%20file&amp;body=Hi%2C%0D%0A%0D%0ACheck%20out%20this%20file%3A%0D%0A{{ file.file.url }}">Email</a>
+                <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#emailModal{{ file.pk }}">Email</button>
               </div>
             </div>
           </div>
         </div>
+                <!-- Email Modal -->
+<div class="modal fade" id="emailModal{{ file.id }}" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel{{ file.id }}" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="emailModalLabel{{ file.id }}">Email File</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'feed:email_file' file.id %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="recipientEmail{{ file.id }}">Recipient Email</label>
+            <input type="email" class="form-control" id="recipientEmail{{ file.id }}" name="recipient_email" placeholder="Enter recipient email">
+          </div>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
       {% endfor %}
     </div>
   </div>

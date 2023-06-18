@@ -1,13 +1,13 @@
 .container {
-    transform: scale(0.9);
-    transform-origin: top;
-  }
+      zoom: 90%;
+      transform-origin: top;
+    }
 
-  .card {
-    width: 90%;
-    margin: 0 auto;
-  }
+    .card {
+      width: 90%;
+      margin: 0 auto;
+    }
 
-  .card-body {
-    font-size: 0.9rem;
-  }
+    .card-body {
+      font-size: 0.9rem;
+    }

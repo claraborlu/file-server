@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import EmailMessage
+from django.contrib import messages
+
 from .forms import FileUploadForm
 from .models import File
 
@@ -28,3 +31,28 @@ def download_file_view(request, file_id):
         file.downloads += 1
         file.save()
         return redirect(file.file.url)
+
+def email_file_view(request, file_id):
+    file = get_object_or_404(File, id=file_id)
+    if request.method == 'POST':
+        recipient_email = request.POST.get('recipient_email')
+        
+        # Create an EmailMessage instance
+        email = EmailMessage(
+            'File Email',
+            'Please find the attached file.',
+            'Team@FileServer.com',
+            [recipient_email],
+        )
+        
+        # Attach the file to the email
+        email.attach_file(file.file.path)
+        email.send()
+        
+        # Update the count of emails sent
+        file.emails_sent += 1
+        file.save()
+        messages.success(request=request, message='File Emailed')
+        return redirect('feed:feed')
+
+
