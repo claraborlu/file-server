@@ -13,6 +13,10 @@ from .models import CustomUser
 from .forms import CustomUserCreationForm, LoginForm
 
 def signup(request):
+    # prevent authenticated user from accessing this view
+    if request.user.is_authenticated:
+        return redirect('feed:feed')
+    
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -62,6 +66,10 @@ def activate(request, uidb64, token):
 
 
 def login_view(request):
+    # prevent authenticated user from accessing this view
+    if request.user.is_authenticated:
+        return redirect('feed:feed')
+    
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
