@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import EmailMessage
 from django.contrib import messages
+from django.db.models import Q
 
 from .forms import FileUploadForm
 from .models import File
@@ -26,12 +27,14 @@ def upload_file(request):
     
     return render(request, 'feed/upload_file.html', {'form': form})
 
+@login_required
 def download_file_view(request, file_id):
         file = get_object_or_404(File, id=file_id)
         file.downloads += 1
         file.save()
         return redirect(file.file.url)
-
+    
+@login_required
 def email_file_view(request, file_id):
     file = get_object_or_404(File, id=file_id)
     if request.method == 'POST':
@@ -54,5 +57,19 @@ def email_file_view(request, file_id):
         file.save()
         messages.success(request=request, message='File Emailed')
         return redirect('feed:feed')
+
+@login_required
+def search_view(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        results = File.objects.filter(
+                Q(title__icontains=query) | Q(description__icontains=query)
+            )
+    context = {
+        'query': query,
+        'files': results
+    }
+    return render(request, 'feed/search_results.html', context)
 
 

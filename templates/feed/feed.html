@@ -1,79 +1,9 @@
 {% extends "_base.html" %}
-{% load static %}
 
 {% block content %}
-  <div class="container">
-    <div class="row">
-      {% for file in files %}
-        <div class="col-md-4">
-          <div class="card mb-3">
-            <div class="card-content-container" style="height:300px;">
-              <div class="card-body">
-                <h5 class="card-title">{{ file.title }}</h5>
-                <p class="card-text small">{{ file.description }}</p>
-
-                <!-- Ensure only admins can see downloads and emails stats -->
-                {% if user.is_staff %}
-                <div class="card-text">
-                  <strong>Downloads:</strong> {{ file.downloads }}
-                </div>
-                <div class="card-text">
-                  <strong>Emails Sent:</strong> {{ file.emails_sent }}
-                </div>
-                {% endif %}
-
-                {% if file.file_type == 'image' %}
-                  <img width="150" height="200" src="{{ file.file.url }}" class="card-img-top" alt="{{ file.title }}">
-                {% elif file.file_type == 'application' %}
-                  <img width="150" height="200" src="{% static 'images/pdf.png' %}" class="card-img-top" alt="{{ file.title }}">
-                {% elif file.file_type == 'audio' %}
-                  <audio controls>
-                    <source  src="{{ file.file.url }}" type="audio/mp3">
-                    Your browser does not support the audio element.
-                  </audio>
-                {% elif file.file_type == 'video' %}
-                  <div class="embed-responsive embed-responsive-16by9">
-                    <video width="320" height="240" class="embed-responsive-item" controls>
-                      <source src="{{ file.file.url }}" type="video/mp4">
-                      Your browser does not support the video element.
-                    </video>
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-center">
-              <div class="btn-group" role="group">
-                <a class="btn btn-secondary mx-1" href="{{ file.file.url }}" target="_blank">Preview</a>
-                <a class="btn btn-success mx-1" href="{% url 'feed:download' file.pk %}" download>Download</a>
-                <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#emailModal{{ file.pk }}">Email</button>
-              </div>
-            </div>
-          </div>
-        </div>
-                <!-- Email Modal -->
-<div class="modal fade" id="emailModal{{ file.id }}" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel{{ file.id }}" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="emailModalLabel{{ file.id }}">Email File</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" action="{% url 'feed:email_file' file.id %}">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="recipientEmail{{ file.id }}">Recipient Email</label>
-            <input type="email" class="form-control" id="recipientEmail{{ file.id }}" name="recipient_email" placeholder="Enter recipient email">
-          </div>
-          <button type="submit" class="btn btn-primary">Send</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-      {% endfor %}
-    </div>
-  </div>
+  {% if files %}
+    {% include './data.html' %}
+  {% else %}
+    <p>No Files Yet!.</p>
+  {% endif %}
 {% endblock %}

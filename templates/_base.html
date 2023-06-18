@@ -16,35 +16,41 @@
 <body>
   <div class="container">
     <header class="p-3 mb-3 border-bottom">
-      <div class="container2">
-        <div class="d-flex flex-wrap align-items-center justify-content-center
-          justify-content-lg-start">
-          <a class="navbar-brand" href="/">File Server</a>
-          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center
-            mb-md-0">
-          {% if user.is_authenticated %}
-            <li><a href="#" class="nav-link px-2 link-blue">Feed</a></li>
-            <li><a href="#" class="nav-link px-3 link-blue">Search</a></li>
-            <li><a href="#" class="nav-link px-2 link-blue">Admin</a></li>
-          </ul>
-          <div class="dropdown text-end">
-            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
-              id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ user.email }}
-            </a>
-            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-              <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
-            </ul>
-          </div>
-          {% else %}
-          </ul>
-          <div class="text-end">
-          </div>
-          {% endif %}        
+      <div class="container2 d-flex justify-content-center align-items-center">
+        <a class="navbar-brand text-blue" href="{% url 'feed:feed' %}">File Server</a>
+        <div class="flex-grow-1"></div>
+        {% if user.is_authenticated %}
+        <div class="search-form">
+          <form class="d-flex" action="{% url 'feed:search' %}" method="get">
+            <input name="q" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
         </div>
+        <div class="flex-grow-1"></div>
+        <div class="nav-links">
+          <ul class="nav">
+            {% if user.is_staff %}
+            <li><button type="button" class="btn btn-primary btn-sm px-2">
+              <a href="{% url 'feed:upload' %}" class="text-white text-decoration-none">Upload File</a>
+            </button></li>
+            {% endif %}
+          </ul>
+        </div>
+        <div class="flex-grow-1"></div>
+        <div class="dropdown">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
+            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ user.email }}
+          </a>
+          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
+          </ul>
+        </div>
+      {% endif %}
       </div>
     </header>
-
+    
+    
     <main>    
       {% if messages %}
         {% for message in messages %}
