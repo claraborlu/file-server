@@ -13,6 +13,8 @@ class File(models.Model):
     description = models.TextField()
     file = models.FileField(upload_to='files/')
     file_type = models.CharField(max_length=15, choices=FILE_TYPES, blank=True, null=True)
+    downloads = models.PositiveIntegerField(default=0)
+    emails_sent = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

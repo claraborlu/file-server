@@ -12,12 +12,17 @@
               <div class="card-body">
                 <h5 class="card-title">{{ file.title }}</h5>
                 <p class="card-text small">{{ file.description }}</p>
+                
+                <!-- Ensure only admins can see downloads and emails stats -->
+                {% if user.is_staff %}
                 <div class="card-text">
                   <strong>Downloads:</strong> {{ file.downloads }}
                 </div>
                 <div class="card-text">
                   <strong>Emails Sent:</strong> {{ file.emails_sent }}
                 </div>
+                {% endif %}
+
                 {% if file.file_type == 'image' %}
                   <img width="150" height="200" src="{{ file.file.url }}" class="card-img-top" alt="{{ file.title }}">
                 {% elif file.file_type == 'application' %}
@@ -40,7 +45,7 @@
             <div class="card-footer d-flex justify-content-center">
               <div class="btn-group" role="group">
                 <a class="btn btn-secondary mx-1" href="{{ file.file.url }}" target="_blank">Preview</a>
-                <a class="btn btn-success mx-1" href="{{ file.file.url }}" download>Download</a>
+                <a class="btn btn-success mx-1" href="{% url 'feed:download' file.pk %}" download>Download</a>
                 <a class="btn btn-primary mx-1" href="mailto:?subject=Check%20out%20this%20file&amp;body=Hi%2C%0D%0A%0D%0ACheck%20out%20this%20file%3A%0D%0A{{ file.file.url }}">Email</a>
               </div>
             </div>
