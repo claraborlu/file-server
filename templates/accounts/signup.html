@@ -1,13 +1,16 @@
 {% extends "_base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}Registere {% endblock title %}
+{% block title %}Register{% endblock title %}
 {% block content %}
   <h2>SIGN UP</h2>
     <form action="{% url 'accounts:signup' %}" method="post">
         {% csrf_token %}
         {{ form|crispy }}
         <br>
-        <button type="submit" class="btn btn-primary ml-2" type="submit">Sign Up</button> ||
-        <a href="{% url 'accounts:login' %}" class="btn btn-success ml-2">Log In</a>
+        <button type="submit" class="btn btn-primary ml-2" type="submit">Sign Up</button>
     </form>
+    <br>
+    <div class="text-center">
+      <p>Already have an account? <a href="{% url 'accounts:login' %}" class="btn btn-link">Log In Here</a></p>
+    </div>
 {% endblock content %}
