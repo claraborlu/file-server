@@ -41,7 +41,7 @@ def signup(request):
             )
             email.content_subtype="html"
             email.send()
-            messages.success(request=request, message='Account activation sent')
+            messages.info(request=request, message='Account Created. Check your Email to activate your Account!')
             return redirect('accounts:login')
     else:
         form = CustomUserCreationForm()
@@ -52,17 +52,17 @@ def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = CustomUser.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+    except (TypeError, ValueError, CustomUser.DoesNotExist):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        login(request, user)
-        messages.success(request=request, message='Account Activated')
-        return redirect('feed:feed')
+        messages.success(request=request, message='You have Activated your Account. Kindly Login')
+        return redirect('accounts:login')
     else:
-        return render(request, 'accounts/account_activation_invalid.html')
+        messages.error(request, 'Activation link is invalid!')
+        return redirect('accounts:login')
 
 
 def login_view(request):
@@ -77,8 +77,13 @@ def login_view(request):
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=email, password=password)
             if user is not None:
-                login(request, user)
-                return redirect('feed:feed')
+                if user.is_active:
+                    login(request, user)
+                    return redirect('feed:feed')
+                messages.warning(request, 'Account Not Activated. Check Your Email for Activation link!')
+                return redirect('accounts:login')
+            messages.error(request, 'Wrong Email or Password!')
+            return redirect('accounts:login')
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})

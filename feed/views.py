@@ -21,10 +21,10 @@ def upload_file(request):
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request, 'File Uploaded Successfully')
             return redirect('feed:feed')
     else:
         form = FileUploadForm()
-    
     return render(request, 'feed/upload_file.html', {'form': form})
 
 @login_required
@@ -40,19 +40,17 @@ def email_file_view(request, file_id):
     if request.method == 'POST':
         recipient_email = request.POST.get('recipient_email')
         
-        # Create an EmailMessage instance
         email = EmailMessage(
             'File Email',
             'Please find the attached file.',
             'Team@FileServer.com',
             [recipient_email],
         )
-        
-        # Attach the file to the email
+        # Attach file to the email
         email.attach_file(file.file.path)
         email.send()
-        
-        # Update the count of emails sent
+    
+        # Update count of emails sent
         file.emails_sent += 1
         file.save()
         messages.success(request=request, message='File Emailed')
