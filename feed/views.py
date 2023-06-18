@@ -5,17 +5,10 @@ from django.shortcuts import render, redirect
 from .forms import FileUploadForm
 from .models import File
 
+@login_required
 def feed(request):
-    pdf_files = File.objects.filter(file_type='application')
-    image_files = File.objects.filter(file_type='image')
-    video_files = File.objects.filter(file_type='video')
-    audio_files = File.objects.filter(file_type='audio')
-    
-    return render(request, 'feed/feed.html', {'pdf_files': pdf_files, 
-                                                'image_files': image_files,
-                                                'video_files': video_files, 
-                                                'audio_files': audio_files, 
-                                           })
+    files = File.objects.all()
+    return render(request, 'feed/feed.html', {'files':files})
     
 @staff_member_required
 @login_required

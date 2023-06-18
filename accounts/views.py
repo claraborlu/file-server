@@ -56,7 +56,7 @@ def activate(request, uidb64, token):
         user.save()
         login(request, user)
         messages.success(request=request, message='Account Activated')
-        return redirect('accounts:home')
+        return redirect('feed:feed')
     else:
         return render(request, 'accounts/account_activation_invalid.html')
 
@@ -70,7 +70,7 @@ def login_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('accounts:home')
+                return redirect('feed:feed')
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
@@ -80,7 +80,3 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('accounts:login')
-
-
-def home(request):
-    return render(request, 'accounts/home.html', {})

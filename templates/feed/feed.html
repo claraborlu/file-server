@@ -1,78 +1,51 @@
-{% extends '_base.html' %}
+{% extends "_base.html" %}
+{% load static %}
 
 {% block content %}
   <div class="container">
-    <h2>File Server Feed</h2>
-
-    <!-- Images Section -->
-    <h3>Images</h3>
+    <h1>Feed</h1>
     <div class="row">
-      {% for image in image_files %}
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="thumbnail">
-            <img src="{{ image.file.url }}" alt="{{ image.title }}">
-            <div class="caption">
-              <h4>{{ image.title }}</h4>
-              <p>{{ image.description }}</p>
+      {% for file in files %}
+        <div class="col-md-4">
+          <div class="card mb-3">
+            <div class="card-content-container" style="height:300px;">
+              <div class="card-body">
+                <h5 class="card-title">{{ file.title }}</h5>
+                <p class="card-text small">{{ file.description }}</p>
+                <div class="card-text">
+                  <strong>Downloads:</strong> {{ file.downloads }}
+                </div>
+                <div class="card-text">
+                  <strong>Emails Sent:</strong> {{ file.emails_sent }}
+                </div>
+                {% if file.file_type == 'image' %}
+                  <img width="150" height="200" src="{{ file.file.url }}" class="card-img-top" alt="{{ file.title }}">
+                {% elif file.file_type == 'application' %}
+                  <img width="150" height="200" src="{% static 'images/pdf.png' %}" class="card-img-top" alt="{{ file.title }}">
+                {% elif file.file_type == 'audio' %}
+                  <audio controls>
+                    <source  src="{{ file.file.url }}" type="audio/mp3">
+                    Your browser does not support the audio element.
+                  </audio>
+                {% elif file.file_type == 'video' %}
+                  <div class="embed-responsive embed-responsive-16by9">
+                    <video width="320" height="240" class="embed-responsive-item" controls>
+                      <source src="{{ file.file.url }}" type="video/mp4">
+                      Your browser does not support the video element.
+                    </video>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center">
+              <div class="btn-group" role="group">
+                <a class="btn btn-secondary mx-1" href="{{ file.file.url }}" target="_blank">Preview</a>
+                <a class="btn btn-success mx-1" href="{{ file.file.url }}" download>Download</a>
+                <a class="btn btn-primary mx-1" href="mailto:?subject=Check%20out%20this%20file&amp;body=Hi%2C%0D%0A%0D%0ACheck%20out%20this%20file%3A%0D%0A{{ file.file.url }}">Email</a>
+              </div>
             </div>
           </div>
         </div>
-      {% empty %}
-        <p>No images available.</p>
-      {% endfor %}
-    </div>
-
-    <!-- PDF Section -->
-    <h3>PDFs</h3>
-    <div class="row">
-      {% for pdf in pdf_files %}
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="thumbnail">
-            <i class="fas fa-file-pdf fa-4x"></i>
-            <div class="caption">
-              <h4>{{ pdf.title }}</h4>
-              <p>{{ pdf.description }}</p>
-            </div>
-          </div>
-        </div>
-      {% empty %}
-        <p>No PDFs available.</p>
-      {% endfor %}
-    </div>
-
-    <!-- Audio Section -->
-    <h3>Audio</h3>
-    <div class="row">
-      {% for audio in audio_files %}
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="thumbnail">
-            <i class="fas fa-file-audio fa-4x"></i>
-            <div class="caption">
-              <h4>{{ audio.title }}</h4>
-              <p>{{ audio.description }}</p>
-            </div>
-          </div>
-        </div>
-      {% empty %}
-        <p>No audio files available.</p>
-      {% endfor %}
-    </div>
-
-    <!-- Video Section -->
-    <h3>Videos</h3>
-    <div class="row">
-      {% for video in video_files %}
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="thumbnail">
-            <i class="fas fa-file-video fa-4x"></i>
-            <div class="caption">
-              <h4>{{ video.title }}</h4>
-              <p>{{ video.description }}</p>
-            </div>
-          </div>
-        </div>
-      {% empty %}
-        <p>No videos available.</p>
       {% endfor %}
     </div>
   </div>
