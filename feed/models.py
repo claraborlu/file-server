@@ -2,17 +2,10 @@ from django.db import models
 import mimetypes
 
 class File(models.Model):
-    FILE_TYPES = [
-        ('image', 'Image'),
-        ('audio', 'Audio'),
-        ('video', 'Video'),
-        ('application', 'Application'),
-    ]
-
     title = models.CharField(max_length=100)
     description = models.TextField()
     file = models.FileField(upload_to='files/')
-    file_type = models.CharField(max_length=15, choices=FILE_TYPES, blank=True, null=True)
+    file_type = models.CharField(max_length=15, blank=True, null=True)
     downloads = models.PositiveIntegerField(default=0)
     emails_sent = models.PositiveIntegerField(default=0)
     uploaded_at = models.DateTimeField(auto_now_add=True)
